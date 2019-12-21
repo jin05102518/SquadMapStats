@@ -37,7 +37,7 @@ while True:
     # Getting the mapname
     mapName = jsonResponse["data"]["attributes"]["details"]["map"]
     # If the player amount is less than minimumPlayers, then dont record a new row (To avoid filling the file during an unseeded server
-    if playerAmountInt >= 10:
+    if playerAmountInt >= minimumPlayers:
         file.write("\n" + date + ";" + mapName + ";" + playerAmount)
     # Wait the interval time to record next data entry
     time.sleep(interval)
