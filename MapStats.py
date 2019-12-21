@@ -28,14 +28,14 @@ while True:
     # Generating the date for the current CSV row
     date = time.strftime("%d/%m/%Y %H:%M:%S")
     # Getting the data from the battlemetrics API and converting it to an json object
-    leaderResponse = json.loads(requests.get(ServerInfoUrl).text)
+    jsonResponse = json.loads(requests.get(ServerInfoUrl).text)
 
     # Getting the amount of players
-    playerAmountInt = leaderResponse["data"]["attributes"]["players"]
+    playerAmountInt = jsonResponse["data"]["attributes"]["players"]
     # Converting it to string
     playerAmount = str(playerAmountInt)
     # Getting the mapname
-    mapName = leaderResponse["data"]["attributes"]["details"]["map"]
+    mapName = jsonResponse["data"]["attributes"]["details"]["map"]
     # If the player amount is less than minimumPlayers, then dont record a new row (To avoid filling the file during an unseeded server
     if playerAmountInt >= 10:
         file.write("\n" + date + ";" + mapName + ";" + playerAmount)
