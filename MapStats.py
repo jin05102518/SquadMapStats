@@ -4,13 +4,13 @@ import time
 import requests
 
 # Check your server ID on the battlemetrics URL for your server https://www.battlemetrics.com/servers/squad/999999 - That last one number is the server ID
-serverID = "4078917"
+serverID = "0000000"
 # BM API URL where we get the data from
 ServerInfoUrl = "https://api.battlemetrics.com/servers/" + serverID
 # How many seconds between server check (and recording, if you put say, 1 second, it will record one entry per second CAREFUL with disk space. 60 seconds should result on an extreme data gather if you want to check what are the maps that works ffor your server
 interval = 60
 # Minimum amount of players needed to record data to the CSV
-minimumPlayers = 10
+minimumPlayers = 0
 
 # File generation stuff - Adding date and time to the filename
 fileTimestamp = time.strftime("%Y-%m-%d_%H-%M-%S")
@@ -31,11 +31,19 @@ while True:
     jsonResponse = json.loads(requests.get(ServerInfoUrl).text)
 
     # Getting the amount of players
-    playerAmountInt = jsonResponse["data"]["attributes"]["players"]
+    try:
+        playerAmountInt = jsonResponse["data"]["attributes"]["players"]
+    except:
+        playerAmountInt = 404
+        print("Error Getting the player amount")
     # Converting it to string
     playerAmount = str(playerAmountInt)
     # Getting the mapname
-    mapName = jsonResponse["data"]["attributes"]["details"]["map"]
+    try:
+        mapName = jsonResponse["data"]["attributes"]["details"]["map"]
+    except:
+        mapName = "ErrorMap"
+        print("Error Getting the map")
     # If the player amount is less than minimumPlayers, then don't record a new row (To avoid filling the file during an unseeded server)
     if playerAmountInt >= minimumPlayers:
         file.write("\n" + date + ";" + mapName + ";" + playerAmount)
